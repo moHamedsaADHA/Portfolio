@@ -39,7 +39,7 @@ export function About() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -78,7 +78,7 @@ export function About() {
           <h3 className="text-2xl font-semibold mb-8 gradient-text">
             Core Technologies
           </h3>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             {[
               'JavaScript (ES6+)',
               'TypeScript',
@@ -100,7 +100,7 @@ export function About() {
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.1 }}
-                className="px-4 py-2 glass-card rounded-full text-sm font-medium hover:shadow-accent-glow transition-all duration-300 cursor-default"
+                className="px-3 py-2 sm:px-4 glass-card rounded-full text-xs sm:text-sm font-medium hover:shadow-accent-glow transition-all duration-300 cursor-default"
               >
                 {tech}
               </motion.span>
