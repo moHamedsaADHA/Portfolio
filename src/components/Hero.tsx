@@ -120,7 +120,7 @@ export function Hero() {
               className="glass-card hover:shadow-accent-glow transition-all duration-300"
               asChild
             >
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <a href="https://github.com/moHamedsaADHA" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                 <Github className="h-5 w-5" />
               </a>
             </Button>

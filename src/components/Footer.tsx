@@ -79,7 +79,7 @@ export function Footer() {
                 className="glass-card hover:shadow-accent-glow transition-all duration-300"
                 asChild
               >
-                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <a href="https://github.com/moHamedsaADHA" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                   <Github className="h-4 w-4" />
                 </a>
               </Button>
