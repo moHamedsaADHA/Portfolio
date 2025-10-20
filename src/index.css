@@ -1,0 +1,243 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Futuristic Portfolio Design System - Mohammed Saad
+All colors MUST be HSL. Cosmic theme with electric accents.
+*/
+
+@layer base {
+  :root {
+    /* Background System */
+    --background: 220 27% 4%;
+    --background-secondary: 220 20% 8%;
+    --foreground: 210 40% 98%;
+
+    /* Card System */
+    --card: 220 20% 8%;
+    --card-foreground: 210 40% 98%;
+    --card-border: 240 30% 15%;
+
+    /* Glass Morphism */
+    --glass: 220 20% 10%;
+    --glass-border: 240 30% 20%;
+
+    /* Popover System */
+    --popover: 220 20% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary - Electric Blue */
+    --primary: 240 100% 70%;
+    --primary-glow: 240 100% 80%;
+    --primary-foreground: 220 27% 4%;
+
+    /* Secondary - Deep Purple */
+    --secondary: 260 60% 60%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Accent - Neon Cyan */
+    --accent: 180 100% 60%;
+    --accent-glow: 180 100% 70%;
+    --accent-foreground: 220 27% 4%;
+
+    /* Muted System */
+    --muted: 220 20% 15%;
+    --muted-foreground: 215 20% 70%;
+
+    /* Status Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
+
+    /* Interactive Elements */
+    --border: 240 30% 18%;
+    --input: 240 30% 15%;
+    --ring: 240 100% 70%;
+
+    /* Design Tokens */
+    --radius: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Gradients */
+    --gradient-cosmic: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 50%, hsl(var(--accent)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--background-secondary)) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(var(--glass)) 0%, hsl(var(--card)) 100%);
+    --gradient-text: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+
+    /* Shadows */
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.3);
+    --shadow-accent-glow: 0 0 20px hsl(var(--accent) / 0.4);
+    --shadow-card: 0 8px 32px hsl(var(--background) / 0.8);
+    --shadow-soft: 0 4px 16px hsl(var(--background) / 0.4);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .light {
+    /* Light Mode - Inverted cosmic theme */
+    --background: 210 40% 98%;
+    --background-secondary: 210 30% 95%;
+    --foreground: 220 27% 8%;
+
+    --card: 210 30% 95%;
+    --card-foreground: 220 27% 8%;
+    --card-border: 220 20% 85%;
+
+    --glass: 210 30% 90%;
+    --glass-border: 220 20% 80%;
+
+    --popover: 210 30% 95%;
+    --popover-foreground: 220 27% 8%;
+
+    --primary: 240 100% 60%;
+    --primary-glow: 240 100% 70%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 260 60% 50%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 180 100% 50%;
+    --accent-glow: 180 100% 60%;
+    --accent-foreground: 210 40% 98%;
+
+    --muted: 220 20% 90%;
+    --muted-foreground: 215 20% 40%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 20% 85%;
+    --input: 220 20% 90%;
+    --ring: 240 100% 60%;
+
+    /* Light mode gradients */
+    --gradient-cosmic: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 50%, hsl(var(--accent)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--background-secondary)) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(var(--glass)) 0%, hsl(var(--card)) 100%);
+
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.2);
+    --shadow-accent-glow: 0 0 20px hsl(var(--accent) / 0.3);
+    --shadow-card: 0 8px 32px hsl(var(--muted) / 0.3);
+    --shadow-soft: 0 4px 16px hsl(var(--muted) / 0.2);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Futuristic UI Components */
+  .glass-card {
+    @apply bg-glass/50 backdrop-blur-xl border border-glass-border rounded-lg;
+  }
+
+  .glow-effect {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .accent-glow {
+    box-shadow: var(--shadow-accent-glow);
+  }
+
+  .gradient-text {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cosmic-border {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cosmic-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-cosmic);
+    border-radius: inherit;
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: subtract;
+    -webkit-mask-composite: xor;
+  }
+
+  /* Animation utilities */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-gradient {
+    animation: gradient-shift 8s ease infinite;
+    background-size: 200% 200%;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: var(--shadow-glow); }
+  100% { box-shadow: 0 0 50px hsl(var(--primary) / 0.6); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
