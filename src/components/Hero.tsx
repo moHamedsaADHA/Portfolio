@@ -28,7 +28,7 @@ export function Hero() {
             <div className="cosmic-border rounded-full p-1 animate-pulse-glow">
               <img
                 src={profileImage}
-                alt="Mohammed Saad"
+                alt="Mohammad Saad"
                 className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-background"
               />
             </div>
@@ -48,7 +48,7 @@ export function Hero() {
             className="space-y-4"
           >
             <h1 className="text-5xl md:text-7xl font-bold gradient-text">
-              Mohammed Saad
+              Mohammad Saad
             </h1>
             <div className="flex flex-wrap justify-center gap-2 mb-4">
               <Badge variant="secondary" className="glass-card">Full-Stack Developer</Badge>
