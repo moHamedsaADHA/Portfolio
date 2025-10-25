@@ -4,14 +4,6 @@ import { Heart, Mail, Linkedin, Github, ExternalLink } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 
-const certifications = [
-  { name: 'B2 English', issuer: 'Full Learn English' },
-  { name: 'Freelancing Fundamentals (14+ hrs)', issuer: 'Dandara Al Ebdaa' },
-  { name: 'Node.js Advanced (180+ hrs)', issuer: 'Dandara Al Ebdaa' },
-  { name: 'SQL (40+ hrs)', issuer: 'ITI' },
-  { name: 'MERN stack(+210 hrs)', issuer: 'NTI' },
-  { name: 'UI/UX Design (+40 hrs)', issuer: 'Dandara Al Ebdaa' }
-];
 
 const quickLinks = [
   { name: 'About', href: '#about' },
@@ -132,30 +124,6 @@ export function Footer() {
             </ul>
           </motion.div>
 
-          {/* Certifications */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            <h4 className="font-semibold gradient-text">Certifications</h4>
-            <div className="space-y-2">
-              {certifications.map((cert) => (
-                <Badge 
-                  key={cert.name}
-                  variant="secondary" 
-                  className="glass-card block text-center hover:shadow-accent-glow transition-all duration-300"
-                >
-                  <div className="text-xs">
-                    <div className="font-medium">{cert.name}</div>
-                    <div className="text-muted-foreground">{cert.issuer}</div>
-                  </div>
-                </Badge>
-              ))}
-            </div>
-          </motion.div>
         </div>
 
         {/* Divider */}
