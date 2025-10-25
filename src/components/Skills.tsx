@@ -167,45 +167,7 @@ export function Skills() {
           </div>
         </motion.div>
 
-        {/* Certifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="mt-16 text-center"
-        >
-          <h3 className="text-2xl font-semibold mb-8 gradient-text">
-            Certifications & Training
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: 'English (B2 Level)', issuer: 'Cambridge Assessment', year: '2024' },
-              { title: 'UI/UX Design with Figma', issuer: 'Dandara Al Ebdaa', hours: '40+ Hours' },
-              { title: 'Freelancing Fundamentals', issuer: 'Dandara Al Ebdaa', hours: '14+ Hours' },
-              { title: 'Node.js Advanced', issuer: 'Dandara Al Ebdaa', hours: '180+ Hours' },
-              { title: 'SQL SERVER', issuer: 'ITI Training', hours: '40+ Hours' },
-              { title: 'MEAN Stack Development', issuer: 'NTI Training', hours: '210+ Hours' }
-            ].map((cert, index) => (
-              <motion.div
-                key={cert.title}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Card className="glass-card hover:shadow-accent-glow transition-all duration-300">
-                  <CardContent className="p-6 text-center">
-                    <h4 className="font-semibold gradient-text mb-2">{cert.title}</h4>
-                    <p className="text-sm text-muted-foreground mb-1">{cert.issuer}</p>
-                    <p className="text-xs text-accent">{cert.year || cert.hours}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        {/* Certifications & Training section removed per request */}
       </div>
     </section>
   );

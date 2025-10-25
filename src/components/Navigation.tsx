@@ -7,6 +7,8 @@ import { ThemeToggle } from './ThemeToggle';
 const navItems = [
   { name: 'Home', href: '#hero' },
   { name: 'About', href: '#about' },
+  { name: 'Education', href: '#certifications' },
+  { name: 'Services', href: '#services' },
   { name: 'Projects', href: '#projects' },
   { name: 'Skills', href: '#skills' },
   { name: 'Contact', href: '#contact' },
@@ -18,27 +20,82 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
+    // Use IntersectionObserver centered on the viewport to pick the section
+    // that occupies the center region. Fall back to midpoint-distance method
+    // if IntersectionObserver isn't available.
+    const sectionIds = navItems.map((item) => item.href.substring(1));
+
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          // mark as scrolled if we've moved down at all
+          setScrolled(window.scrollY > 50);
+
+          // Pick the visible entry with the largest intersectionRatio
+          const visible = entries.filter((e) => e.isIntersecting);
+          if (visible.length) {
+            visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+            setActiveSection(visible[0].target.id);
+            return;
+          }
+
+          // Fallback: pick closest midpoint
+          const mid = window.innerHeight / 2;
+          let closest: { section: string; distance: number } | null = null;
+          for (const id of sectionIds) {
+            const el = document.getElementById(id);
+            if (!el) continue;
+            const rect = el.getBoundingClientRect();
+            const elemMid = (rect.top + rect.bottom) / 2;
+            const distance = Math.abs(elemMid - mid);
+            if (!closest || distance < closest.distance) closest = { section: id, distance };
+          }
+          if (closest) setActiveSection(closest.section);
+        },
+        {
+          root: null,
+          // focus the central 20% of the viewport (so element centered there gets priority)
+          rootMargin: '-40% 0px -40% 0px',
+          threshold: [0, 0.25, 0.5, 0.75, 1],
+        }
+      );
+
+      // Observe each section element if present
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      // ensure initial state
+      // trigger a small scroll event to let the observer evaluate immediately
+      setTimeout(() => observer.takeRecords(), 50);
+
+      return () => observer.disconnect();
+    }
+
+    // Final fallback for environments without IntersectionObserver
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-      
-      // Update active section based on scroll position
-      const sections = navItems.map(item => item.href.substring(1));
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      
-      if (currentSection) {
-        setActiveSection(currentSection);
+      const mid = window.innerHeight / 2;
+      let closest: { section: string; distance: number } | null = null;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        const elemMid = (rect.top + rect.bottom) / 2;
+        const distance = Math.abs(elemMid - mid);
+        if (!closest || distance < closest.distance) closest = { section: id, distance };
       }
+      if (closest) setActiveSection(closest.section);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   const scrollToSection = (href: string) => {
