@@ -9,7 +9,7 @@ const certifications = [
   { name: 'Freelancing Fundamentals (14+ hrs)', issuer: 'Dandara Al Ebdaa' },
   { name: 'Node.js Advanced (180+ hrs)', issuer: 'Dandara Al Ebdaa' },
   { name: 'SQL (40+ hrs)', issuer: 'ITI' },
-  { name: 'MEAN Stack(+210 hrs)', issuer: 'NTI' },
+  { name: 'MERN stack(+210 hrs)', issuer: 'NTI' },
   { name: 'UI/UX Design (+40 hrs)', issuer: 'Dandara Al Ebdaa' }
 ];
 

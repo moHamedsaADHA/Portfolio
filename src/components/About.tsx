@@ -26,7 +26,7 @@ export function About() {
         'Participated in Dandara Al Ebdaa training program: UI/UX Design using Figma (+40h). Node.js & MongoDB (+180h). Developed strong full-stack and problem-solving skills.'
     },
     { title: 'SQL Server (2024–2025)', org: 'ITI Training', details: '40+ Hours — SQL queries, normalization, stored procedures, optimization.' },
-    { title: 'NTI Training Program (2025–2026)', org: 'National Telecommunication Institute', details: '+210h, MEAN Stack, 3 projects (2 accepted).' },
+    { title: 'NTI Training Program (2025–2026)', org: 'National Telecommunication Institute', details: '+210h, MERN stack, 3 projects (2 accepted).' },
     { title: 'Competitions (2023–2024)', org: 'ICPC 2023 Participant', details: 'Algorithmic thinking and teamwork.' },
     { title: 'Freelancing Fundamentals (2024)', org: 'Dandara Al Ebdaa', details: '14+ Hours — client communication and freelancing principles.' },
   ];
@@ -105,7 +105,7 @@ export function About() {
           </h2>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto text-balance leading-relaxed">
             With 2+ years of freelance experience and 14 completed projects (including 12 full-stack web applications 
-            and 2 specialized front/back projects), I deliver scalable and responsive applications using the MEAN stack. 
+            and 2 specialized front/back projects), I deliver scalable and responsive applications using the MERN stack. 
             Skilled in UI/UX, HTML5, CSS3, JavaScript, TypeScript, Node.js, and MongoDB. Certified in English (B2) 
             and multiple technical courses. Passionate about problem-solving, creative design, teamwork, and building 
             modern digital products that make a real impact.
