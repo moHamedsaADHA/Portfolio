@@ -8,6 +8,7 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/use-toast';
+import { send } from '@emailjs/browser';
 
 interface ContactForm {
   name: string;
@@ -63,15 +64,46 @@ export function Contact() {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<ContactForm>();
 
   const onSubmit = async (data: ContactForm) => {
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Message sent!",
-      description: "Thank you for your message. I'll get back to you soon.",
-    });
-    
-    reset();
+    // Read EmailJS config from Vite env variables. Set these in .env as:
+    // VITE_EMAILJS_SERVICE_ID=your_service_id
+    // VITE_EMAILJS_TEMPLATE_ID=your_template_id
+    // VITE_EMAILJS_PUBLIC_KEY=your_public_key
+    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
+    const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
+    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
+
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+      // Fallback: show helpful toast
+      toast({
+        title: 'Email not configured',
+        description: 'EmailJS keys are missing. Please set VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID and VITE_EMAILJS_PUBLIC_KEY in your environment.',
+      });
+      return;
+    }
+
+    const templateParams = {
+      from_name: data.name,
+      from_email: data.email,
+      subject: data.subject,
+      message: data.message,
+      // optional: add metadata
+      sent_at: new Date().toISOString(),
+    };
+
+    try {
+      await send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+      toast({
+        title: 'Message sent!',
+        description: "Thank you for your message. I'll get back to you soon.",
+      });
+      reset();
+    } catch (err) {
+      console.error('EmailJS error', err);
+      toast({
+        title: 'Failed to send',
+        description: 'Something went wrong while sending your message. Please try again or contact me directly via email.',
+      });
+    }
   };
 
   return (

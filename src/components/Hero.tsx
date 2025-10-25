@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { ChevronDown, Mail, Github, Linkedin, ExternalLink } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import profileImage from '../assets/mohammed-saad-profile.jpg';
+// switched to the available PNG asset (was a missing .jpg file)
+import profileImage from '../assets/mohammed-saad-profile.png';
 
 export function Hero() {
   const scrollToProjects = () => {

@@ -176,10 +176,8 @@ export function Footer() {
           className="text-center space-y-2"
         >
           <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-            © 2024 Mohammad Saad. Built with 
-            <Heart className="h-4 w-4 text-red-500 animate-pulse" /> 
-            and cutting-edge tech.
-          </p>
+            © 2024 Mohammad Saad.
+            </p>
           <p className="text-xs text-muted-foreground">
             All rights reserved. Designed and developed with modern web technologies.
           </p>

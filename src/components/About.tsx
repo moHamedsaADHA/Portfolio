@@ -26,7 +26,7 @@ export function About() {
         'Participated in Dandara Al Ebdaa training program: UI/UX Design using Figma (+40h). Node.js & MongoDB (+180h). Developed strong full-stack and problem-solving skills.'
     },
     { title: 'SQL Server (2024–2025)', org: 'ITI Training', details: '40+ Hours — SQL queries, normalization, stored procedures, optimization.' },
-    { title: 'NTI Training Program (2025–2026)', org: 'National Telecommunication Institute', details: '+210h, MERN stack, 3 projects (2 accepted).' },
+    { title: 'NTI Training Program (2025–2026)', org: 'National Telecommunication Institute', details: '+210h, MEAN stack, 3 projects (2 accepted).' },
     { title: 'Competitions (2023–2024)', org: 'ICPC 2023 Participant', details: 'Algorithmic thinking and teamwork.' },
     { title: 'Freelancing Fundamentals (2024)', org: 'Dandara Al Ebdaa', details: '14+ Hours — client communication and freelancing principles.' },
   ];
