@@ -10,6 +10,8 @@ const projects = [
   {
     id: 1,
     title: 'Is-Used Marketplace',
+    github: '#',
+    demo: '#',
     role: 'Backend Developer',
     duration: '50+ hours',
     description: 'Backend architecture for a marketplace enabling new & used product listings with secure authentication.',
@@ -22,6 +24,8 @@ const projects = [
   {
     id: 2,
     title: 'Smart Attendance System',
+    github: '#',
+    demo: '#',
     role: 'Full-Stack Developer',
     duration: '40+ hours',
     description: 'Complete attendance management system with real-time tracking and reporting dashboard.',
@@ -34,6 +38,8 @@ const projects = [
   {
     id: 3,
     title: 'Professional Portfolio',
+    github: '#',
+    demo: '#',
     role: 'Frontend Developer',
     duration: '30+ hours',
     description: 'Modern responsive portfolio website with dark/light mode and smooth animations.',
@@ -46,6 +52,8 @@ const projects = [
   {
     id: 4,
     title: 'Real-time Chat Application',
+    github: '#',
+    demo: '#',
     role: 'Full-Stack Developer',
     duration: '60+ hours',
     description: 'Feature-rich chat application with real-time messaging, file sharing, and group chats.',
@@ -58,6 +66,8 @@ const projects = [
   {
     id: 5,
     title: 'AI-Powered Mini Project',
+    github: '#',
+    demo: '#',
     role: 'Frontend Developer',
     duration: '25+ hours',
     description: 'Interactive AI-powered application with machine learning integration and modern UI.',
@@ -70,6 +80,8 @@ const projects = [
   {
     id: 6,
     title: 'Cinema Database System',
+    github: '#',
+    demo: '#',
     role: 'Backend Developer',
     duration: '45+ hours',
     description: 'Comprehensive cinema management system with booking functionality and admin panel.',
@@ -151,13 +163,14 @@ export function Projects() {
                     )}
                   </div>
 
-                  <div className="flex gap-2 pt-4">
+                  <div className="flex items-center gap-2 pt-4">
+                    {/* 1) View Details (no external link) */}
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
-                          className="flex-1 glass-card hover:shadow-accent-glow transition-all duration-300"
+                          className="glass-card hover:shadow-accent-glow transition-all duration-300 px-10 md:px-16"
                           onClick={() => setSelectedProject(project)}
                         >
                           View Details
@@ -178,7 +191,7 @@ export function Projects() {
                               <Badge variant="secondary" className="glass-card">
                                 {project.type}
                               </Badge>
-                              <Badge 
+                              <Badge
                                 variant={project.status === 'Completed' ? 'default' : 'secondary'}
                                 className="glass-card"
                               >
@@ -187,7 +200,7 @@ export function Projects() {
                             </div>
                           </div>
                         </DialogHeader>
-                        
+
                         <div className="space-y-6">
                           <div>
                             <h4 className="font-semibold mb-2">Project Overview</h4>
@@ -221,17 +234,50 @@ export function Projects() {
                         </div>
                       </DialogContent>
                     </Dialog>
-                    
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="glass-card hover:shadow-accent-glow transition-all duration-300"
-                      asChild
-                    >
-                      <a href="#" target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </Button>
+
+                    {/* 2) GitHub Code link */}
+                    <div className="flex items-center">
+                      <div className="h-8 w-px bg-gradient-cosmic opacity-40 mr-2" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="glass-card hover:shadow-accent-glow transition-all duration-300 flex items-center space-x-2"
+                        asChild
+                      >
+                        <a
+                          href={project.github || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`View ${project.title} code on GitHub`}
+                          title="View code on GitHub"
+                        >
+                          <Github className="h-4 w-4" />
+                          <span className="text-sm">Code</span>
+                        </a>
+                      </Button>
+                    </div>
+
+                    {/* 3) Demo / Swagger link (arrow box) */}
+                    <div className="flex items-center">
+                      <div className="h-8 w-px bg-gradient-cosmic opacity-40 mr-2" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="glass-card hover:shadow-accent-glow transition-all duration-300"
+                        asChild
+                      >
+                        {project.demo && project.demo !== '#' ? (
+                          <a href={project.demo} target="_blank" rel="noopener noreferrer" aria-label={`Open demo for ${project.title}`}>
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        ) : (
+                          // If no demo provided, render a disabled-looking span so layout stays consistent
+                          <span className="opacity-40 cursor-not-allowed px-2 py-1 inline-flex items-center">
+                            <ExternalLink className="h-4 w-4" />
+                          </span>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
