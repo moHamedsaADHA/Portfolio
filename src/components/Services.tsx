@@ -41,7 +41,7 @@ export function Services() {
   const { actualTheme } = useTheme();
 
   return (
-    <section id="services" className="py-20 relative">
+    <section id="services" className="py-12 relative">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -131,7 +131,7 @@ export function Services() {
         </motion.div>
 
         {/* CTA */}
-        <motion.div className="mt-12 text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }}>
+        <motion.div className="mt-8 text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }}>
           <div className="mb-4 text-lg font-semibold">Let’s Build Something Extraordinary Together.</div>
           <Button variant="default" className="bg-gradient-to-r from-cyan-400 to-blue-600 text-black px-6 py-3 rounded-full hover:scale-105 animate-pulse-slow" onClick={() => {
             const el = document.getElementById('contact');
@@ -140,7 +140,7 @@ export function Services() {
         </motion.div>
 
         {/* Optional tech logos backdrop (subtle) */}
-        <div className="pointer-events-none mt-10 relative h-24">
+        <div className="pointer-events-none mt-6 relative h-12">
           <div className="absolute left-1/4 top-0 opacity-30 blur-sm">{/* Placeholder for floating logos */}</div>
         </div>
 

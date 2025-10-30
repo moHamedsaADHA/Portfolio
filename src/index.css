@@ -241,3 +241,40 @@ All colors MUST be HSL. Cosmic theme with electric accents.
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
+
+/* Custom scrollbar styling for a sleek, professional look
+   Improved visibility across Chromium (Chrome/Edge) and Firefox. */
+.custom-scrollbar {
+  /* Firefox: thumb color then track color */
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--accent) / 0.95) hsl(var(--background) / 0.12);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  /* Stronger, more opaque thumb so it shows on dark/light backgrounds */
+  background: linear-gradient(180deg, hsl(var(--accent) / 0.98), hsl(var(--primary) / 0.92));
+  min-height: 28px;
+  border-radius: 9999px;
+  box-shadow: 0 0 16px hsl(var(--accent) / 0.28);
+  border: 3px solid rgba(0,0,0,0.08);
+  transition: transform 160ms var(--transition-smooth), box-shadow 160ms var(--transition-smooth);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 22px hsl(var(--accent) / 0.36);
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
