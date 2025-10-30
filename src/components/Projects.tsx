@@ -9,17 +9,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 const projects = [
   {
     id: 1,
-    title: 'Is-Used Marketplace',
-    github: '#',
+    title: 'Is-Used Marketplace — Backend',
+    github: 'https://lnkd.in/dmZgMRXv',
     demo: '#',
     role: 'Backend Developer',
     duration: '50+ hours',
-    description: 'Backend architecture for a marketplace enabling new & used product listings with secure authentication.',
-    fullDescription: 'Comprehensive backend solution for a marketplace platform featuring secure user authentication, product listing management, and optimized database queries. Built with Node.js, Express, and MongoDB with JWT authentication and RESTful API design.',
-    technologies: ['Node.js', 'Express', 'MongoDB', 'JWT', 'REST API'],
-    type: 'Full-Stack',
+    description: 'A production-grade backend architecture for a marketplace platform supporting listing and discovery of new and used products with a focus on secure authentication and optimized API performance.',
+    fullDescription: `A production-oriented backend architecture for a marketplace platform that supports listing and discovery of both new (🆕) and used (♻️) products. Built from scratch with clean, layered architecture and strong engineering practices to meet academic standards and real-world production requirements. The system emphasizes secure authentication, clear data modeling, and high-performance REST APIs so buyers and sellers can interact safely and reliably.`,
+    technologies: ['Node.js', 'TypeScript', 'Express.js', 'MongoDB', 'Mongoose', 'JWT', 'bcrypt'],
+    type: 'Backend',
     status: 'Completed',
-    features: ['User Authentication', 'Product Management', 'Secure API', 'Database Optimization']
+    features: ['Public product browsing', 'Secure JWT access/refresh authentication', 'Robust CRUD with validation', 'ERD-driven data modeling', '25+ REST endpoints', 'Postman-tested endpoints']
   },
   {
     id: 2,
