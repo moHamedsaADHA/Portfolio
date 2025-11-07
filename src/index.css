@@ -155,11 +155,22 @@ All colors MUST be HSL. Cosmic theme with electric accents.
     @apply border-border;
   }
 
+    html,
+    body {
+      /* Prevent horizontal scroll caused by overflowing elements and stop x-axis overscroll */
+      max-width: 100%;
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+    }
   body {
     @apply bg-background text-foreground transition-colors duration-300;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   }
 
+    /* Ensure container elements don't introduce horizontal overflow */
+    .container {
+      overflow-x: hidden;
+    }
   html {
     scroll-behavior: smooth;
   }

@@ -31,11 +31,22 @@ export function Navigation() {
           // mark as scrolled if we've moved down at all
           setScrolled(window.scrollY > 50);
 
-          // Pick the visible entry with the largest intersectionRatio
-          const visible = entries.filter((e) => e.isIntersecting);
-          if (visible.length) {
-            visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-            setActiveSection(visible[0].target.id);
+          // Prefer the intersecting entry with the largest intersection area
+          // (width * height) to avoid ties when multiple sections intersect.
+          const intersecting = entries.filter((e) => e.isIntersecting && e.intersectionRect);
+          if (intersecting.length) {
+            let best = intersecting[0];
+            let bestArea = (best.intersectionRect.width || 0) * (best.intersectionRect.height || 0);
+            for (let i = 1; i < intersecting.length; i++) {
+              const e = intersecting[i];
+              const area = (e.intersectionRect.width || 0) * (e.intersectionRect.height || 0);
+              if (area > bestArea) {
+                best = e;
+                bestArea = area;
+              }
+            }
+            const id = (best.target as HTMLElement).id?.trim();
+            if (id && id !== activeSection) setActiveSection(id);
             return;
           }
 
@@ -50,7 +61,7 @@ export function Navigation() {
             const distance = Math.abs(elemMid - mid);
             if (!closest || distance < closest.distance) closest = { section: id, distance };
           }
-          if (closest) setActiveSection(closest.section);
+          if (closest && closest.section !== activeSection) setActiveSection(closest.section);
         },
         {
           root: null,
@@ -70,7 +81,25 @@ export function Navigation() {
       // trigger a small scroll event to let the observer evaluate immediately
       setTimeout(() => observer.takeRecords(), 50);
 
-      return () => observer.disconnect();
+      // Listen for hash changes (mobile native anchor taps update the hash).
+      // When hash changes, smoothly scroll to the new section. This ensures
+      // that taps on mobile anchors that update the URL will trigger a smooth
+      // scroll even if the browser default jump is suppressed or inconsistent.
+      const onHashChange = () => {
+        const id = window.location.hash ? window.location.hash.substring(1) : '';
+        if (!id) return;
+        const el = document.getElementById(id);
+        if (el) {
+          // Use requestAnimationFrame to avoid layout jank on some mobile browsers
+          requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth' }));
+        }
+      };
+      window.addEventListener('hashchange', onHashChange);
+
+      return () => {
+        observer.disconnect();
+        window.removeEventListener('hashchange', onHashChange);
+      };
     }
 
     // Final fallback for environments without IntersectionObserver
@@ -184,20 +213,31 @@ export function Navigation() {
             <div className="container mx-auto px-4 py-4">
               <div className="flex flex-col space-y-4">
                 {navItems.map((item, index) => (
-                  <motion.button
+                  // Use native anchor on mobile so taps update the URL/hash and
+                  // behave consistently across devices. We still prevent default
+                  // and call scrollToSection to preserve smooth scrolling and to
+                  // close the mobile menu.
+                  <motion.a
+                    as="a"
                     key={item.name}
+                    href={item.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                    onClick={() => scrollToSection(item.href)}
-                    className={`text-left px-3 py-2 text-sm font-medium transition-colors rounded-lg ${
+                    onClick={() => {
+                      // Allow the native anchor navigation (updates the hash)
+                      // so mobile browsers treat this as a regular link tap.
+                      // We still close the mobile menu here.
+                      setIsOpen(false);
+                    }}
+                    className={`block text-left px-3 py-2 text-sm font-medium transition-colors rounded-lg ${
                       activeSection === item.href.substring(1)
                         ? 'text-accent bg-accent/10'
                         : 'text-foreground hover:text-accent hover:bg-accent/10'
                     }`}
                   >
                     {item.name}
-                  </motion.button>
+                  </motion.a>
                 ))}
               </div>
             </div>
