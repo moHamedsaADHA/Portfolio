@@ -4,7 +4,8 @@ import { ParticleBackground } from '../components/ParticleBackground';
 import { Navigation } from '../components/Navigation';
 import { Hero } from '../components/Hero';
 import { About } from '../components/About';
-import { Projects } from '../components/Projects'; 
+import { Projects } from '../components/Projects';
+import Feedbacks from '../components/Feedbacks';
 import { Services } from '../components/Services';
 import { Skills } from '../components/Skills';
 import { Contact } from '../components/Contact';
@@ -28,6 +29,8 @@ const Portfolio = () => {
           <About />
           <Services />
           <Projects />
+          {/* Feedbacks component already renders a section with id="feedbacks" */}
+          <Feedbacks />
           <Skills />
           <Contact />
         </main>

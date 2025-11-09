@@ -1,63 +1,33 @@
-.imagesRow {.section {
-
-  display: flex;  width: 100%;
-
-  align-items: center;  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.02) 100%);
-
-  gap: 0;  color: var(--foreground);
-
-  padding: 0;  padding: 40px 0;
-
-  margin: 0;}
-
-  width: auto;
-
-}.inner {
-
-.slide {  max-width: 1200px;
-
-  display: flex;  margin: 0 auto;
-
-  align-items: center;  display: grid;
-
-  justify-content: center;  grid-template-columns: 1fr 1.1fr;
-
-  padding: 0;  gap: 64px; /* increased gap so windmill (arrow) is farther from the image box */
-
-  margin: 0;  align-items: center;
-
-  width: auto;  padding: 40px 20px;
-
-  flex: none;}
-
+.section {
+  width: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.02) 100%);
+  color: var(--foreground);
+  padding: 40px 0;
 }
 
-.feedbackImage {.left {
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 64px; /* increased gap so windmill (arrow) is farther from the image box */
+  align-items: center;
+  padding: 40px 20px;
+}
 
-  display: block;  display: flex;
+.left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  margin: 0;  align-items: center;
-
-  padding: 0;  justify-content: center;
-
-  width: auto;}
-
+.windmill {
+  width: min(320px, 45vw);
   height: auto;
+  display: block;
+}
 
-  max-width: none;.windmill {
-
-  max-height: 100%;  width: min(320px, 45vw);
-
-  object-fit: contain;  height: auto;
-
-  border-radius: 0;  display: block;
-
-  box-shadow: none;}
-
-  background: transparent;
-
-}.right {
-
+.right {
   display: flex;
   align-items: center;
   justify-content: center;

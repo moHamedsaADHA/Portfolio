@@ -10,6 +10,7 @@ const navItems = [
   { name: 'Education', href: '#certifications' },
   { name: 'Services', href: '#services' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Feedbacks', href: '#feedbacks' },
   { name: 'Skills', href: '#skills' },
   { name: 'Contact', href: '#contact' },
 ];
@@ -20,6 +21,10 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
+    // If window isn't available (SSR), bail out early so subsequent
+    // references to `window` don't trigger TS18048 ('window' is possibly 'undefined').
+    if (typeof window === 'undefined') return;
+
     // Use IntersectionObserver centered on the viewport to pick the section
     // that occupies the center region. Fall back to midpoint-distance method
     // if IntersectionObserver isn't available.
@@ -28,8 +33,37 @@ export function Navigation() {
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
+          // If the Feedbacks section is pinned or occupying the top area of
+          // the viewport (typical when GSAP ScrollTrigger pins the section),
+          // force the nav to mark it active until the pinned period ends.
+          try {
+            const fb = document.getElementById('feedbacks');
+            if (fb) {
+              const r = fb.getBoundingClientRect();
+              // r.top near 0 while pinned; require the bottom to extend past
+              // a small portion of the viewport so we don't accidentally lock
+              // when it's scrolled past.
+              if (r.top <= 2 && r.bottom >= window.innerHeight * 0.25) {
+                setActiveSection('feedbacks');
+                return;
+              }
+            }
+          } catch (e) {
+            // ignore DOM errors in weird environments
+          }
+          // If we're at the very top of the page and no explicit hash is set,
+          // prefer the hero section (Home). This fixes a case where the
+          // About section can be reported as the largest intersecting
+          // region on load causing the nav to highlight About instead of Home.
+          if (typeof window !== 'undefined' && window.scrollY < 80) {
+            const hash = window.location.hash;
+            if (!hash || hash === '' || hash === '#hero') {
+              setActiveSection('hero');
+              return;
+            }
+          }
           // mark as scrolled if we've moved down at all
-          setScrolled(window.scrollY > 50);
+          if (typeof window !== 'undefined') setScrolled(window.scrollY > 50);
 
           // Prefer the intersecting entry with the largest intersection area
           // (width * height) to avoid ties when multiple sections intersect.
@@ -104,7 +138,34 @@ export function Navigation() {
 
     // Final fallback for environments without IntersectionObserver
     const handleScroll = () => {
+      if (typeof window === 'undefined') return;
       setScrolled(window.scrollY > 50);
+
+      // If feedbacks is currently pinned (or occupying top area), keep
+      // the nav active on it until scrolling past the section.
+      try {
+        const fb = document.getElementById('feedbacks');
+        if (fb) {
+          const r = fb.getBoundingClientRect();
+          if (r.top <= 2 && r.bottom >= window.innerHeight * 0.25) {
+            setActiveSection('feedbacks');
+            return;
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      // If we're at the very top and there's no explicit hash, ensure
+      // the hero section (Home) is selected. This prevents About from
+      // showing as active immediately on initial load.
+      if (window.scrollY < 80) {
+        const hash = window.location.hash;
+        if (!hash || hash === '' || hash === '#hero') {
+          setActiveSection('hero');
+          return;
+        }
+      }
       const mid = window.innerHeight / 2;
       let closest: { section: string; distance: number } | null = null;
       for (const id of sectionIds) {
@@ -119,11 +180,15 @@ export function Navigation() {
     };
 
     handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
+    if (typeof window !== 'undefined') {
+      (window as Window).addEventListener('scroll', handleScroll, { passive: true });
+      (window as Window).addEventListener('resize', handleScroll);
+    }
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      if (typeof window !== 'undefined') {
+        (window as Window).removeEventListener('scroll', handleScroll);
+        (window as Window).removeEventListener('resize', handleScroll);
+      }
     };
   }, []);
 
@@ -214,20 +279,18 @@ export function Navigation() {
               <div className="flex flex-col space-y-4">
                 {navItems.map((item, index) => (
                   // Use native anchor on mobile so taps update the URL/hash and
-                  // behave consistently across devices. We still prevent default
-                  // and call scrollToSection to preserve smooth scrolling and to
-                  // close the mobile menu.
+                  // behave consistently across devices. We still close the mobile
+                  // menu on click. Use `motion.a` (which is already an anchor)
+                  // — do not pass an `as` prop because Framer Motion's types
+                  // don't include it for `motion.a` and it causes a TS2322.
                   <motion.a
-                    as="a"
                     key={item.name}
                     href={item.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                     onClick={() => {
-                      // Allow the native anchor navigation (updates the hash)
-                      // so mobile browsers treat this as a regular link tap.
-                      // We still close the mobile menu here.
+                      // Close the mobile menu; allow native navigation to update hash
                       setIsOpen(false);
                     }}
                     className={`block text-left px-3 py-2 text-sm font-medium transition-colors rounded-lg ${
