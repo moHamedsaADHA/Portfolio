@@ -1,0 +1,145 @@
+.imagesRow {.section {
+
+  display: flex;  width: 100%;
+
+  align-items: center;  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.02) 100%);
+
+  gap: 0;  color: var(--foreground);
+
+  padding: 0;  padding: 40px 0;
+
+  margin: 0;}
+
+  width: auto;
+
+}.inner {
+
+.slide {  max-width: 1200px;
+
+  display: flex;  margin: 0 auto;
+
+  align-items: center;  display: grid;
+
+  justify-content: center;  grid-template-columns: 1fr 1.1fr;
+
+  padding: 0;  gap: 64px; /* increased gap so windmill (arrow) is farther from the image box */
+
+  margin: 0;  align-items: center;
+
+  width: auto;  padding: 40px 20px;
+
+  flex: none;}
+
+}
+
+.feedbackImage {.left {
+
+  display: block;  display: flex;
+
+  margin: 0;  align-items: center;
+
+  padding: 0;  justify-content: center;
+
+  width: auto;}
+
+  height: auto;
+
+  max-width: none;.windmill {
+
+  max-height: 100%;  width: min(320px, 45vw);
+
+  object-fit: contain;  height: auto;
+
+  border-radius: 0;  display: block;
+
+  box-shadow: none;}
+
+  background: transparent;
+
+}.right {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sliderViewport {
+  width: 100%;
+  max-width: min(1000px, 75vw);
+  /* Let the viewport size itself to the current image height so the
+     box adapts to the image natural size. Keep overflow hidden for
+     horizontal sliding, but allow vertical growth by using auto height.
+     On very small screens cap the height to avoid huge content. */
+  height: auto;
+  overflow: visible; /* allow the image to sit flush without an enclosing box shadow */
+  border-radius: 0;
+  background: transparent; /* make box fully transparent */
+  box-shadow: none;
+}
+
+.imagesRow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  width: auto;
+}
+
+.slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  flex: none;
+}
+
+/* Removed the max-width: 100% from here so images can use their natural size */
+.feedbackImage {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  /* Rendering/performance hints */
+  image-rendering: auto; /* prefer browser default for photos */
+  -webkit-font-smoothing: antialiased;
+  -webkit-optimize-contrast: 1;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 880px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 24px 12px;
+  }
+  .sliderViewport {
+    /* Cap viewport on smaller screens so images don't overflow the device */
+    height: auto;
+    max-width: min(780px, 95vw);
+    max-height: 80vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .windmill {
+    width: 180px;
+  }
+  .sliderViewport {
+    height: auto;
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 10px;
+  }
+}
