@@ -1,8 +1,29 @@
 .section {
+  position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    background: transparent;
+    overflow: hidden;
+  }
+  
+  .backgroundCircle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    width: 60vw;
+    height: 60vw;
+    max-width: 700px;
+    max-height: 700px;
+    pointer-events: none;
+    opacity: 0.85;
+  }
+  
+  .circleBg {
   width: 100%;
-  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.02) 100%);
-  color: var(--foreground);
-  padding: 40px 0;
+  height: 100%;
+    display: block;
 }
 
 .inner {
@@ -36,25 +57,44 @@
 .sliderViewport {
   width: 100%;
   max-width: min(1000px, 75vw);
-  /* Let the viewport size itself to the current image height so the
-     box adapts to the image natural size. Keep overflow hidden for
-     horizontal sliding, but allow vertical growth by using auto height.
-     On very small screens cap the height to avoid huge content. */
-  height: auto;
-  overflow: visible; /* allow the image to sit flush without an enclosing box shadow */
+  max-height: 80vh;
+    overflow: hidden;
   border-radius: 0;
-  background: transparent; /* make box fully transparent */
+  background: transparent;
   box-shadow: none;
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .gridViewport {
+    position: relative;
+    z-index: 1;
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .imagesRow {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0;
   padding: 0;
   margin: 0;
-  width: auto;
-}
+  width: 100%;
+  }
+  
+  .imagesGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    width: 100vw;
+    min-height: 100vh;
+  }
 
 .slide {
   display: flex;
@@ -62,31 +102,55 @@
   justify-content: center;
   padding: 0;
   margin: 0;
-  width: auto;
+  width: 100%;
   flex: none;
 }
 
-/* Removed the max-width: 100% from here so images can use their natural size */
+.gridItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 220px;
+  background: transparent;
+  box-shadow: none;
+}
 .feedbackImage {
   display: block;
   margin: 0;
   padding: 0;
   width: auto;
   height: auto;
-  max-width: none;
+  max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  border-radius: 0;
-  box-shadow: none;
+  border-radius: 16px;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.12);
   background: transparent;
-  /* Rendering/performance hints */
-  image-rendering: auto; /* prefer browser default for photos */
-  -webkit-font-smoothing: antialiased;
-  -webkit-optimize-contrast: 1;
-  backface-visibility: hidden;
-  will-change: transform;
+  transition: transform 0.3s cubic-bezier(.4, 2, .3, 1), box-shadow 0.3s;
+}
+.imagesGrid .gridItem:nth-child(2n) .feedbackImage {
+  transform: translateY(24px) scale(0.95) rotate(-2deg);
 }
 
+.imagesGrid .gridItem:nth-child(3n) .feedbackImage {
+  transform: translateY(-18px) scale(1.05) rotate(2deg);
+}
+
+.imagesGrid .gridItem:nth-child(4n) .feedbackImage {
+  transform: scale(0.98) rotate(-1deg);
+}
+
+.imagesGrid .gridItem:nth-child(5n) .feedbackImage {
+  transform: translateY(12px) scale(1.02) rotate(1deg);
+}
+
+.imagesGrid .gridItem:hover .feedbackImage {
+  transform: scale(1.08) rotate(0deg);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
+}
 /* Responsive: stack on small screens */
 @media (max-width: 880px) {
   .inner {
@@ -102,6 +166,33 @@
   }
 }
 
+@media (max-width: 900px) {
+  .imagesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .gridItem {
+    height: 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .imagesGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .gridItem {
+    height: 140px;
+  }
+
+  .feedbackImage {
+    border-radius: 10px;
+    max-width: 90vw;
+    max-height: 90vw;
+  }
+}
 @media (max-width: 480px) {
   .windmill {
     width: 180px;
