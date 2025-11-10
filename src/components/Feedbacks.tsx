@@ -22,7 +22,7 @@ export const Feedbacks: React.FC = () => {
         <div style={{
           textAlign: 'center',
           margin: '0 auto',
-          marginBottom: '0', // no space below
+          marginBottom: '1.2rem',
           maxWidth: '700px',
         }}>
           <h2 style={{
@@ -38,13 +38,38 @@ export const Feedbacks: React.FC = () => {
             fontSize: '1.15rem',
             color: '#b0b8d1',
             marginTop: '0.5rem',
-            marginBottom: '0', // no space below
+            marginBottom: '0.5rem',
             lineHeight: '1.5',
           }}>
             A collection of client and user testimonials, highlighting experiences, satisfaction, and the impact of my work.
           </div>
         </div>
-        <div className={styles.gridViewport} style={{paddingTop: '0.2rem'}}>
+        {/* Animated arrow guide: subtle, centered, aria-hidden for screen readers */}
+        <div className={styles.arrowGuide} aria-hidden="true">
+          <span className={`${styles.sideArrow} ${styles.arrow} ${styles.delay1}`}>
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
+          </span>
+          <div className={styles.arrowColumn}>
+            <span className={`${styles.arrow} ${styles.delay2}`}>
+              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M7 10l5 5 5-5z" />
+              </svg>
+            </span>
+            <span className={`${styles.arrow} ${styles.delay3}`}>
+              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M7 10l5 5 5-5z" />
+              </svg>
+            </span>
+          </div>
+          <span className={`${styles.sideArrow} ${styles.arrow} ${styles.delay4}`}>
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
+          </span>
+        </div>
+        <div className={styles.gridViewport}>
           <div className={styles.imagesGrid}>
             {images.map((src, idx) => (
               <div key={src || idx} className={styles.gridItem}>

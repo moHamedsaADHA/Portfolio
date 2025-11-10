@@ -101,7 +101,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  margin: 0;
+  /* margin: 0; */
   width: 100%;
   flex: none;
 }
@@ -150,6 +150,107 @@
 .imagesGrid .gridItem:hover .feedbackImage {
   transform: scale(1.08) rotate(0deg);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
+}
+/* Animated arrow guide: left, center (stacked), right. Subtle, staggered drop/fade */
+.arrowGuide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 56px;
+  /* increased gap to accommodate much larger arrows */
+  /* space between left/center/right groups */
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.arrowColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.sideArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow {
+  color: rgba(56, 189, 248, 0.95);
+  /* sky-400 tone */
+  font-size: 3rem;
+  /* much larger arrows */
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(0);
+  animation: arrowDrop 1.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Ensure inline SVG arrows size consistently and inherit color */
+.arrow svg {
+  width: 3rem;
+  height: 3rem;
+  display: block;
+}
+
+/* Responsive: scale arrows down on small screens so they remain unobtrusive */
+@media (max-width: 600px) {
+  .arrowGuide {
+    gap: 18px;
+  }
+
+  .arrow {
+    font-size: 1.4rem;
+  }
+
+  .arrow svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+.delay1 {
+  animation-delay: 0s;
+}
+
+.delay2 {
+  animation-delay: 0.14s;
+}
+
+.delay3 {
+  animation-delay: 0.28s;
+}
+
+.delay4 {
+  animation-delay: 0.42s;
+}
+
+@keyframes arrowDrop {
+  0% {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(10px);
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
 }
 /* Responsive: stack on small screens */
 @media (max-width: 880px) {
