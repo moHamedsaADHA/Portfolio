@@ -6,10 +6,14 @@ import { Badge } from './ui/badge';
 
 
 const quickLinks = [
+  { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
-  { name: 'Projects', href: '#projects' },
   { name: 'Skills', href: '#skills' },
-  { name: 'Contact', href: '#contact' }
+  { name: 'Projects', href: '#projects' },
+  { name: 'Services', href: '#services' },
+  { name: 'Feedbacks', href: '#feedbacks' },
+  { name: 'Contact', href: '#contact' },
+  { name: 'Certifications', href: '#certifications' },
 ];
 
 export function Footer() {
@@ -41,7 +45,7 @@ export function Footer() {
               onClick={scrollToTop}
             >
               <h3 className="text-2xl font-bold gradient-text">Mohammad Saad</h3>
-              <p className="text-sm text-muted-foreground">Full-Stack Developer</p>
+              <p className="text-sm text-muted-foreground">Full-Stack Developer & UI/UX Designer</p>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Building modern, scalable web applications with passion and precision. 
@@ -90,19 +94,34 @@ export function Footer() {
             className="space-y-4"
           >
             <h4 className="font-semibold gradient-text">Quick Links</h4>
-            <ul className="space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <button
-                    onClick={() => scrollToSection(link.href)}
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors hover:translate-x-1 transform duration-200 inline-flex items-center gap-1"
-                  >
-                    {link.name}
-                    <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <div className="grid grid-cols-2 gap-x-0.6 gap-y-2">
+              <ul className="space-y-2">
+                {quickLinks.slice(0, 4).map((link) => (
+                  <li key={link.name}>
+                    <button
+                      onClick={() => scrollToSection(link.href)}
+                      className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                      style={{ background: 'none', border: 'none', padding: 0, margin: 0, fontWeight: 500, cursor: 'pointer' }}
+                    >
+                      {link.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <ul className="space-y-2">
+                {quickLinks.slice(4, 8).map((link) => (
+                  <li key={link.name}>
+                    <button
+                      onClick={() => scrollToSection(link.href)}
+                      className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                      style={{ background: 'none', border: 'none', padding: 0, margin: 0, fontWeight: 500, cursor: 'pointer' }}
+                    >
+                      {link.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </motion.div>
 
           {/* Services */}

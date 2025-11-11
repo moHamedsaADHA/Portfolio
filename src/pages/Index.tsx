@@ -1,5 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from '../hooks/useTheme';
+// Use the clean InteractiveCursor implementation
+import InteractiveCursor from '../components/InteractiveCursorClean';
 import { ParticleBackground } from '../components/ParticleBackground';
 import { Navigation } from '../components/Navigation';
 import { Hero } from '../components/Hero';
@@ -14,6 +16,8 @@ import { Footer } from '../components/Footer';
 const Portfolio = () => {
   return (
     <ThemeProvider>
+      {/* Interactive cursor overlay (mounted inside ThemeProvider so it reads theme) */}
+      <InteractiveCursor />
       <div className="relative min-h-screen">
         {/* Particle Background */}
         <ParticleBackground />

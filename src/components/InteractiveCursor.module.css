@@ -1,0 +1,108 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* don't block interactions */
+  z-index: 9999;
+}
+
+.cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform, opacity;
+  pointer-events: none;
+  transition: background-color 200ms linear, box-shadow 200ms linear;
+  box-shadow: 0 0 0 0 rgba(0,0,0,0);
+}
+
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform, opacity;
+  opacity: 1;
+}
+
+@keyframes explode {
+  from {
+    transform: translate3d(0,0,0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(var(--tx), var(--ty), 0) scale(0.6);
+    opacity: 0;
+  }
+}
+
+/* The animation uses CSS variables set inline for distance and duration */
+.particle.explode {
+  animation-name: explode;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: forwards;
+}
+
+/* Respect reduced motion preference: disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .cursor, .particle { display: none; }
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* don't block page interactions */
+  z-index: 9999;
+}
+
+/* Small, elegant cursor */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  will-change: transform, opacity, background-color;
+  pointer-events: none;
+  transition: transform 120ms cubic-bezier(.2,.9,.2,1), background-color 200ms ease;
+  box-shadow: 0 0 10px rgba(0,0,0,0.06);
+  background: var(--cursor-color, rgba(255,255,255,0.95));
+  mix-blend-mode: var(--cursor-blend, normal);
+}
+
+/* Particles for click explosion */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate3d(0,0,0) scale(1);
+  will-change: transform, opacity;
+  background: var(--particle-color, rgba(255,255,255,0.9));
+  opacity: 1;
+}
+
+@keyframes particleAnim {
+  to {
+    transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) scale(0.6);
+    opacity: 0;
+  }
+}
+
+/* Each particle will set its --dur and animation via inline style for slight variance */
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .cursor, .particle { display: none !important; }
+}
+

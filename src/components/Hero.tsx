@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown, Mail, Github, Linkedin, ExternalLink } from 'lucide-react';
+import { ChevronDown, Mail, Github, Linkedin, ExternalLink, Download } from 'lucide-react';
+import cvUrl from '../assets/M.Saad\'s CV.pdf';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 // switched to the available PNG asset (was a missing .jpg file)
@@ -24,7 +25,7 @@ export function Hero() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-            className="relative inline-block"
+            className="relative inline-block mt-6 md:mt-8"
           >
             <div className="cosmic-border rounded-full p-1 animate-pulse-glow">
               <img
@@ -76,6 +77,17 @@ export function Hero() {
             >
               View My Work
               <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            {/* Download CV button - opens download via anchor (asChild) */}
+            <Button
+              size="lg"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-glow transition-all duration-300 group"
+              asChild
+            >
+              <a href={cvUrl} download="M.Saad-CV.pdf" aria-label="Download CV">
+                Download CV
+                <Download className="ml-2 h-4 w-4" />
+              </a>
             </Button>
             <Button 
               onClick={scrollToContact}
