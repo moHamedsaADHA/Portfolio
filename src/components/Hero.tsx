@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, Mail, Github, Linkedin, ExternalLink, Download } from 'lucide-react';
-import cvUrl from '../assets/M.Saad\'s CV.pdf';
+import cvUrl from '../assets/Mo_Saad\'s_CV.pdf';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 // switched to the available PNG asset (was a missing .jpg file)
@@ -84,7 +84,7 @@ export function Hero() {
               className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-glow transition-all duration-300 group"
               asChild
             >
-              <a href={cvUrl} download="M.Saad-CV.pdf" aria-label="Download CV">
+              <a href={cvUrl} download="Mo_Saad's_CV.pdf" aria-label="Download CV">
                 Download CV
                 <Download className="ml-2 h-4 w-4" />
               </a>

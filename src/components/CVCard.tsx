@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './CVCard.module.css';
-import cvUrl from '../assets/M.Saad\'s CV.pdf';
+import cvUrl from '../assets/Mo_Saad\'s_CV.pdf';
 
 const CVCard: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const CVCard: React.FC = () => {
 
           <a
             href={cvUrl}
-            download="M.Saad-CV.pdf"
+            download="Mo_Saad's_CV.pdf"
             className={`${styles.btn} ${styles.downloadButton}`}
           >
             Download
