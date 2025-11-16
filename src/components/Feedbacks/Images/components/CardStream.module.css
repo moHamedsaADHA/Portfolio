@@ -1,0 +1,94 @@
+.wrapper {
+  position: absolute;
+  left: 50%;
+  top: 46%; /* move stream slightly closer to the heading */
+  transform: translate(-50%, -6%);
+  width: 100%;
+  max-width: 1200px;
+  height: 320px; /* slightly taller to accommodate larger images */
+  overflow: hidden;
+  z-index: 30; /* above scanner */
+  touch-action: pan-y;
+}
+
+.track {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.card {
+  flex: 0 0 auto;
+  margin-right: 4px; /* tighter horizontal gap between cards */
+  min-height: 260px; /* allow height to grow if image requires it */
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  box-shadow: 0 8px 28px rgba(2,6,23,0.6);
+  transform: translate3d(0,0,0);
+}
+
+.card img {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: auto; /* preserve natural aspect ratio without cropping */
+  object-fit: contain;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* scanned overlay */
+.scannedMask {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 44%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 32;
+  overflow: hidden;
+  mix-blend-mode: normal;
+  /* center vertical scanning area */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scannedMask .track {
+  filter: contrast(1.15) saturate(1.05) brightness(1.18) drop-shadow(0 6px 18px rgba(70,240,120,0.2));
+  transform: translateX(-50%);
+}
+
+/* subtle vertical gradient cut to emphasize scanning */
+.scannedMask::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.06) 10%, rgba(0,0,0,0.12) 30%, rgba(0,0,0,0.12) 70%, rgba(0,0,0,0.06) 90%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+}
+
+/* small center line visual to match scanner */
+/* removed vertical center line to avoid full-height scan line visual */
+.scannedMask::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  max-height: 320px; /* constrain to stream height to avoid spanning entire section */
+  background: linear-gradient(180deg, rgba(70,240,120,0.0) 0%, rgba(70,240,120,0.95) 48%, rgba(70,240,120,0.95) 52%, rgba(70,240,120,0.0) 100%);
+  box-shadow: 0 0 14px rgba(70,240,120,0.55);
+  pointer-events: none;
+}

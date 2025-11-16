@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion, useAnimation } from 'framer-motion';
+import RevealOnScroll from './RevealOnScroll';
 import { useTheme } from '@/hooks/useTheme';
 import { Code, Palette, Users, Trophy } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
@@ -60,36 +61,7 @@ export function About() {
   // Place the longest labels first so they occupy the top row of the grid
   const sortedTechs = [...techList].sort((a, b) => b.length - a.length);
 
-  useEffect(() => {
-    // orchestrate staggered entrance on page load
-    const STAGGER = 200; // ms
-    items.forEach((_, i) => {
-      setTimeout(() => {
-        // pulse the center line briefly
-        lineControls.start({
-          boxShadow: [
-            '0 0 6px rgba(0,170,255,0.08)',
-            '0 0 36px rgba(0,170,255,0.28)',
-            '0 0 6px rgba(0,170,255,0.08)'
-          ],
-          transition: { duration: 3.5 }
-        });
-
-        // animate the matching card (using custom prop)
-        cardControls.start((custom) => {
-          if (!custom || custom.index !== i) return {};
-          return {
-            opacity: 1,
-            scale: 1,
-            x: 0,
-            y: [20, 0],
-            transition: { type: 'spring', stiffness: 120, damping: 18 }
-          };
-        });
-      }, i * STAGGER);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Card animations are triggered per-item by RevealOnScroll via `onReveal`.
   return (
     <section id="about" className="py-20 relative">
       <div className="container mx-auto px-4">
@@ -172,27 +144,71 @@ export function About() {
                     {/* Left column */}
                     <div className={`flex justify-center md:justify-end`}>
                       {isLeft ? (
-                        <motion.div
-                          className="w-full md:w-auto md:max-w-md"
-                          initial={{ opacity: 0, scale: 0.8, x: initialX, y: 0 }}
-                          animate={cardControls}
-                          custom={{ index, isLeft }}
+                        <RevealOnScroll
+                          index={index}
+                          stagger={0.06}
+                          mountOnEnter={true}
+                          animateOpacity={false}
+                          once={false}
+                          onReveal={() => {
+                            // pulse the center line briefly
+                            lineControls.start({
+                              boxShadow: [
+                                '0 0 6px rgba(0,170,255,0.08)',
+                                '0 0 36px rgba(0,170,255,0.28)',
+                                '0 0 6px rgba(0,170,255,0.08)'
+                              ],
+                              transition: { duration: 3.5 }
+                            });
+
+                            // animate this specific card using the shared controller
+                            cardControls.start((custom) => {
+                              if (!custom || custom.index !== index) return {};
+                              return {
+                                opacity: 1,
+                                scale: 1,
+                                x: 0,
+                                y: [20, 0],
+                                transition: { type: 'spring', stiffness: 90, damping: 22 }
+                              };
+                            });
+                          }}
+                          onHide={() => {
+                            // reverse this specific card to its off-center position and hide
+                            cardControls.start((custom) => {
+                              if (!custom || custom.index !== index) return {};
+                              return {
+                                opacity: 0,
+                                scale: 0.8,
+                                x: initialX,
+                                y: 0,
+                                transition: { type: 'spring', stiffness: 70, damping: 18 }
+                              };
+                            });
+                          }}
                         >
-                          <div className="relative md:mr-8 md:text-right">
-                            <div className="hidden md:block absolute right-[-18px] top-6 w-4 h-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 shadow-[0_0_16px_rgba(0,170,255,0.4)]" />
-                            <motion.article
-                              whileHover={{ translateY: -6, boxShadow: '0 8px 30px rgba(0,170,255,0.08)' }}
-                              className={`${timelineCardBase} ${actualTheme === 'light' ? timelineCardLightWithBlackText : timelineCardDark}`}
-                            >
-                              <div className="flex items-baseline justify-between gap-3">
-                                <h4 className="text-cyan-300 font-semibold text-lg">{item.title}</h4>
-                                {item.date ? <span className={`text-sm ${actualTheme === 'light' ? 'text-black' : 'text-gray-300'}`}>{item.date}</span> : null}
-                              </div>
-                              {item.org ? <div className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-1 italic`}>{item.org}</div> : null}
-                              {item.details ? <p className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-3 leading-relaxed`}>{item.details}</p> : null}
-                            </motion.article>
-                          </div>
-                        </motion.div>
+                          <motion.div
+                            className="w-full md:w-auto md:max-w-md"
+                            initial={{ opacity: 0, scale: 0.8, x: initialX, y: 0 }}
+                            animate={cardControls}
+                            custom={{ index, isLeft }}
+                          >
+                            <div className="relative md:mr-8 md:text-right">
+                              <div className="hidden md:block absolute right-[-18px] top-6 w-4 h-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 shadow-[0_0_16px_rgba(0,170,255,0.4)]" />
+                              <motion.article
+                                whileHover={{ translateY: -6, boxShadow: '0 8px 30px rgba(0,170,255,0.08)' }}
+                                className={`${timelineCardBase} ${actualTheme === 'light' ? timelineCardLightWithBlackText : timelineCardDark}`}
+                              >
+                                <div className="flex items-baseline justify-between gap-3">
+                                  <h4 className="text-cyan-300 font-semibold text-lg">{item.title}</h4>
+                                  {item.date ? <span className={`text-sm ${actualTheme === 'light' ? 'text-black' : 'text-gray-300'}`}>{item.date}</span> : null}
+                                </div>
+                                {item.org ? <div className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-1 italic`}>{item.org}</div> : null}
+                                {item.details ? <p className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-3 leading-relaxed`}>{item.details}</p> : null}
+                              </motion.article>
+                            </div>
+                          </motion.div>
+                        </RevealOnScroll>
                       ) : (
                         <div className="hidden md:block w-full" />
                       )}
@@ -204,27 +220,69 @@ export function About() {
                     {/* Right column */}
                     <div className="flex justify-center md:justify-start">
                       {!isLeft ? (
-                        <motion.div
-                          className="w-full md:w-auto md:max-w-md"
-                          initial={{ opacity: 0, scale: 0.8, x: initialX, y: 0 }}
-                          animate={cardControls}
-                          custom={{ index, isLeft }}
+                        <RevealOnScroll
+                          index={index}
+                          stagger={0.06}
+                          mountOnEnter={true}
+                          animateOpacity={false}
+                          once={false}
+                          onReveal={() => {
+                            // pulse the center line briefly
+                            lineControls.start({
+                              boxShadow: [
+                                '0 0 6px rgba(0,170,255,0.08)',
+                                '0 0 36px rgba(0,170,255,0.28)',
+                                '0 0 6px rgba(0,170,255,0.08)'
+                              ],
+                              transition: { duration: 3.5 }
+                            });
+
+                            cardControls.start((custom) => {
+                              if (!custom || custom.index !== index) return {};
+                              return {
+                                opacity: 1,
+                                scale: 1,
+                                x: 0,
+                                y: [20, 0],
+                                transition: { type: 'spring', stiffness: 90, damping: 22 }
+                              };
+                            });
+                          }}
+                          onHide={() => {
+                            cardControls.start((custom) => {
+                              if (!custom || custom.index !== index) return {};
+                              return {
+                                opacity: 0,
+                                scale: 0.8,
+                                x: initialX,
+                                y: 0,
+                                transition: { type: 'spring', stiffness: 70, damping: 18 }
+                              };
+                            });
+                          }}
                         >
-                          <div className="relative md:ml-8 md:text-left">
-                            <div className="hidden md:block absolute left-[-18px] top-6 w-4 h-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 shadow-[0_0_16px_rgba(0,170,255,0.4)]" />
-                            <motion.article
-                              whileHover={{ translateY: -6, boxShadow: '0 8px 30px rgba(0,170,255,0.08)' }}
-                              className={`${timelineCardBase} ${actualTheme === 'light' ? timelineCardLightWithBlackText : timelineCardDark}`}
-                            >
-                              <div className="flex items-baseline justify-between gap-3">
-                                <h4 className="text-cyan-300 font-semibold text-lg">{item.title}</h4>
-                                {item.date ? <span className={`text-sm ${actualTheme === 'light' ? 'text-black' : 'text-gray-300'}`}>{item.date}</span> : null}
-                              </div>
-                              {item.org ? <div className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-1 italic`}>{item.org}</div> : null}
-                              {item.details ? <p className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-3 leading-relaxed`}>{item.details}</p> : null}
-                            </motion.article>
-                          </div>
-                        </motion.div>
+                          <motion.div
+                            className="w-full md:w-auto md:max-w-md"
+                            initial={{ opacity: 0, scale: 0.8, x: initialX, y: 0 }}
+                            animate={cardControls}
+                            custom={{ index, isLeft }}
+                          >
+                            <div className="relative md:ml-8 md:text-left">
+                              <div className="hidden md:block absolute left-[-18px] top-6 w-4 h-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 shadow-[0_0_16px_rgba(0,170,255,0.4)]" />
+                              <motion.article
+                                whileHover={{ translateY: -6, boxShadow: '0 8px 30px rgba(0,170,255,0.08)' }}
+                                className={`${timelineCardBase} ${actualTheme === 'light' ? timelineCardLightWithBlackText : timelineCardDark}`}
+                              >
+                                <div className="flex items-baseline justify-between gap-3">
+                                  <h4 className="text-cyan-300 font-semibold text-lg">{item.title}</h4>
+                                  {item.date ? <span className={`text-sm ${actualTheme === 'light' ? 'text-black' : 'text-gray-300'}`}>{item.date}</span> : null}
+                                </div>
+                                {item.org ? <div className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-1 italic`}>{item.org}</div> : null}
+                                {item.details ? <p className={`${actualTheme === 'light' ? 'text-black' : 'text-sm text-gray-300'} mt-3 leading-relaxed`}>{item.details}</p> : null}
+                              </motion.article>
+                            </div>
+                          </motion.div>
+                        </RevealOnScroll>
                       ) : (
                         <div className="hidden md:block w-full" />
                       )}

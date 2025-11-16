@@ -157,8 +157,8 @@ const projects = [
   {
     id: 3,
     title: 'Professional Portfolio',
-    github: '#',
-    demo: '#',
+    github: 'https://github.com/moHamedsaADHA/Portfolio',
+    demo: 'edsaad.vercel.app',
     role: 'Frontend Developer',
     duration: '30+ hours',
     description: 'Modern responsive portfolio website with dark/light mode and smooth animations.',
@@ -171,7 +171,7 @@ const projects = [
   {
     id: 4,
     title: 'Online Restaurant Platform',
-    github: 'https://lnkd.in/ddDvj4rH',
+    github: 'https://github.com/moHamedsaADHA/resturant',
     demo: 'https://lnkd.in/dDA8ygJn',
     role: 'Front-End Developer',
     duration: '60+ hours',
@@ -464,16 +464,30 @@ export function Projects() {
                         className="glass-card hover:shadow-accent-glow transition-all duration-300 flex items-center space-x-2"
                         asChild
                       >
-                        <a
-                          href={project.github || '#'}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`View ${project.title} code on GitHub`}
-                          title="View code on GitHub"
-                        >
-                          <Github className="h-4 w-4" />
-                          <span className="text-sm">Code</span>
-                        </a>
+                        {/* Disable Code only for the two specified projects; keep visuals for others */}
+                        {project.title === 'Mathematics Learning Platform' || project.title === 'Cinema Database System' ? (
+                          <span
+                            aria-disabled="true"
+                            role="button"
+                            tabIndex={-1}
+                            title="Code (disabled)"
+                            className="inline-flex items-center space-x-2 cursor-not-allowed"
+                          >
+                            <Github className="h-4 w-4" />
+                            <span className="text-sm">Code</span>
+                          </span>
+                        ) : (
+                            <a
+                              href={project.github || '#'}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`View ${project.title} code on GitHub`}
+                              title="View code on GitHub"
+                            >
+                              <Github className="h-4 w-4" />
+                              <span className="text-sm">Code</span>
+                            </a>
+                        )}
                       </Button>
                     </div>
 

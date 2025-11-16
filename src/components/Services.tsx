@@ -123,7 +123,13 @@ export function Services() {
               'Strong Problem-Solving Skills',
               'Ongoing Support After Delivery'
             ].map((b, idx) => (
-              <motion.div key={b} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ delay: idx * 0.12 }} className="px-4 py-2 rounded-full bg-[#081018]/50 text-sm font-medium shadow-glow">
+              <motion.div
+                key={b}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.12 }}
+                className={`px-4 py-2 rounded-full ${actualTheme === 'light' ? 'bg-white/80 text-black' : 'bg-[#081018]/50'} text-sm font-medium shadow-glow`}
+              >
                 {b}
               </motion.div>
             ))}
@@ -131,7 +137,7 @@ export function Services() {
         </motion.div>
 
         {/* CTA */}
-        <motion.div className="mt-8 text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }}>
+        <motion.div className="mt-4 text-center" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }}>
           <div className="mb-4 text-lg font-semibold">Let’s Build Something Extraordinary Together.</div>
           <Button variant="default" className="bg-gradient-to-r from-cyan-400 to-blue-600 text-black px-6 py-3 rounded-full hover:scale-105 animate-pulse-slow" onClick={() => {
             const el = document.getElementById('contact');
@@ -140,7 +146,7 @@ export function Services() {
         </motion.div>
 
         {/* Optional tech logos backdrop (subtle) */}
-        <div className="pointer-events-none mt-6 relative h-12">
+        <div className="pointer-events-none mt-2 relative h-8">
           <div className="absolute left-1/4 top-0 opacity-30 blur-sm">{/* Placeholder for floating logos */}</div>
         </div>
 

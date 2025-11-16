@@ -1,0 +1,14 @@
+.wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -20%);
+  z-index: 20; /* above particles, below cards */
+  pointer-events: none;
+}
+
+.canvas {
+  display: block;
+  border-radius: 12px;
+  filter: drop-shadow(0 8px 28px rgba(0,0,0,0.45));
+}

@@ -289,9 +289,18 @@ export function Navigation() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                    onClick={() => {
-                      // Close the mobile menu; allow native navigation to update hash
+                    onClick={(e) => {
+                      // Close the mobile menu and programmatically smooth-scroll
+                      // to the target section. Prevent the default native jump to
+                      // ensure consistent smooth behavior on mobile browsers.
+                      e.preventDefault();
                       setIsOpen(false);
+                      // Use requestAnimationFrame to avoid layout jank on some devices
+                      requestAnimationFrame(() => {
+                        scrollToSection(item.href);
+                        // update the URL hash for consistency
+                        try { window.history.replaceState(undefined, '', item.href); } catch (err) { }
+                      });
                     }}
                     className={`block text-left px-3 py-2 text-sm font-medium transition-colors rounded-lg ${
                       activeSection === item.href.substring(1)

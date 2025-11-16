@@ -49,6 +49,36 @@
   background: rgba(56, 189, 248, 0.12);
 }
 
+/* Lightbox navigation arrows */
+.modalNav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 64px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  font-size: 32px;
+  line-height: 64px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 30;
+  border: none;
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6);
+}
+
+.modalNav:hover {
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.modalNavLeft {
+  left: 12px;
+}
+
+.modalNavRight {
+  right: 12px;
+}
 /* --- Clean, modern grid layout for Feedbacks --- */
 .section {
   width: 100vw;
@@ -56,11 +86,15 @@
   min-height: 60vh;
   background: transparent;
   padding: 0 0 48px 0;
-  }
+  position: relative;
+    /* ensure absolutely positioned canvases are scoped to this section */
+    overflow: hidden;
+}
   
   .headingWrapper {
     text-align: center;
-    margin: 0 auto 1.2rem auto;
+    margin: 0 auto 0.4rem auto;
+      /* further reduce space between title and content */
     max-width: 700px;
   }
   
@@ -83,17 +117,22 @@
   .gridViewport {
   width: 100vw;
   max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+      margin: 0 auto;
+      display: none;
+        /* hidden by default to avoid duplicate images behind the CardStream */
+        justify-content: center;
+        align-items: center;
 }
 
+        .showGrid .gridViewport {
+          display: flex;
+        }
 /* --- Modern Responsive Grid for Feedbacks --- */
-.imagesGrid {
+        .imagesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.35rem;
+    /* further reduce gap between rows/columns */
   width: 100%;
   padding: 0 16px;
     align-items: stretch;

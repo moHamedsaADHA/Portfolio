@@ -12,6 +12,7 @@ import { Services } from '../components/Services';
 import { Skills } from '../components/Skills';
 import { Contact } from '../components/Contact';
 import { Footer } from '../components/Footer';
+import BackToTopArrow from '../components/BackToTopArrow';
 
 const Portfolio = () => {
   return (
@@ -41,6 +42,8 @@ const Portfolio = () => {
         
         {/* Footer */}
         <Footer />
+        {/* Back to top arrow (appears after Services) */}
+        <BackToTopArrow showAfterSelector="#services" targetSelector="#hero" />
       </div>
     </ThemeProvider>
   );

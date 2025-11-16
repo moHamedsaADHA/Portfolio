@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { Mail, Phone, MapPin, Send, Linkedin, Github } from 'lucide-react';
@@ -61,16 +61,54 @@ const socialLinks = [
 
 export function Contact() {
   const { toast } = useToast();
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<ContactForm>();
+  const LS_KEY = 'contactFormData';
+
+  const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm<ContactForm>({
+    defaultValues: { name: '', email: '', subject: '', message: '' }
+  });
+
+  // Safe localStorage helpers
+  const safeRead = (): Partial<ContactForm> | null => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) return null;
+      const raw = window.localStorage.getItem(LS_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return null;
+      return parsed as Partial<ContactForm>;
+    } catch (err) {
+      console.warn('contact: failed to read localStorage', err);
+      return null;
+    }
+  };
+
+  const safeWrite = (value: Partial<ContactForm>) => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) return;
+      window.localStorage.setItem(LS_KEY, JSON.stringify(value));
+    } catch (err) {
+      console.warn('contact: failed to write localStorage', err);
+    }
+  };
+
+  const safeRemove = () => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) return;
+      window.localStorage.removeItem(LS_KEY);
+    } catch (err) {
+      console.warn('contact: failed to remove localStorage', err);
+    }
+  };
 
   const onSubmit = async (data: ContactForm) => {
     // Read EmailJS config from Vite env variables. Set these in .env as:
     // VITE_EMAILJS_SERVICE_ID=your_service_id
     // VITE_EMAILJS_TEMPLATE_ID=your_template_id
     // VITE_EMAILJS_PUBLIC_KEY=your_public_key
-    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
-    const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
-    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
+    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined;
+    // use env template id when provided, otherwise use requested template id
+    const TEMPLATE_ID = (import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined) ?? 'template_7dlizjw';
+    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined;
 
     if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
       // Fallback: show helpful toast
@@ -91,12 +129,15 @@ export function Contact() {
     };
 
     try {
+      if (import.meta.env.DEV) console.info('Contact: sending templateParams', templateParams);
       await send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
       toast({
         title: 'Message sent!',
         description: "Thank you for your message. I'll get back to you soon.",
       });
-      reset();
+      // Clear form and localStorage after successful submit
+      reset({ name: '', email: '', subject: '', message: '' });
+      safeRemove();
     } catch (err) {
       console.error('EmailJS error', err);
       toast({
@@ -105,6 +146,42 @@ export function Contact() {
       });
     }
   };
+
+  // Restore saved data on mount (if present and valid)
+  useEffect(() => {
+    const saved = safeRead();
+    if (saved) {
+      reset({
+        name: saved.name ?? '',
+        email: saved.email ?? '',
+        subject: saved.subject ?? '',
+        message: saved.message ?? ''
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Live-save on every change
+  useEffect(() => {
+    // `watch` with a callback returns a subscription with an unsubscribe method
+    const subscription: any = watch((value) => {
+      // value may be undefined during initialization
+      if (!value) return;
+      safeWrite(value as Partial<ContactForm>);
+    });
+    return () => {
+      try {
+        // some versions return a function, others an object with unsubscribe()
+        if (typeof subscription === 'function') {
+          (subscription as Function)();
+        } else if (subscription && typeof (subscription as any).unsubscribe === 'function') {
+          (subscription as any).unsubscribe();
+        }
+      } catch (err) {
+        // ignore
+      }
+    };
+  }, [watch]);
 
   return (
     <section id="contact" className="py-20 relative">
