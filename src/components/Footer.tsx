@@ -44,7 +44,7 @@ export function Footer() {
               className="cursor-pointer inline-block"
               onClick={scrollToTop}
             >
-              <h3 className="text-2xl font-bold gradient-text">Mohammad Saad</h3>
+              <h3 className="text-2xl font-bold gradient-text">mohammed Saad</h3>
               <p className="text-sm text-muted-foreground">Full-Stack Developer & UI/UX Designer</p>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -163,7 +163,7 @@ export function Footer() {
           className="text-center space-y-2"
         >
           <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-            © 2024 Mohammad Saad.
+            © 2024 mohammed Saad.
             </p>
           <p className="text-xs text-muted-foreground">
             All rights reserved. Designed and developed with modern web technologies.

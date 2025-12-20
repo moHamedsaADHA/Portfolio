@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styles from './CardStream.module.css';
 
 export default function CardStream({ images = [], onImageClick, enableKeyBoost = true }) {
@@ -11,7 +11,9 @@ export default function CardStream({ images = [], onImageClick, enableKeyBoost =
   const targetKeyBoostRef = useRef(0); // target boost applied while key pressed
   const currentKeyBoostRef = useRef(0); // smoothed boost applied each frame
   const KEY_BOOST_MAG = 0.32; // magnitude of speed change when arrow pressed (px/ms)
-  const [seed, setSeed] = useState(0); // to force re-render when needed
+  const visibleRef = useRef(true);
+  const trackRefsRef = useRef([]);
+  const maskRefsRef = useRef([]);
 
   const CARD_WIDTH = 360; // card width (kept large)
   const CARD_GAP = 4; // significantly tighten horizontal spacing between cards
@@ -28,6 +30,18 @@ export default function CardStream({ images = [], onImageClick, enableKeyBoost =
     positionsRef.current = items.map((_, i) => i * (CARD_WIDTH + CARD_GAP));
 
     let last = performance.now();
+
+    const updateTransforms = () => {
+      // Apply transforms to both tracks without React state
+      for (let i = 0; i < positionsRef.current.length; i++) {
+        const x = positionsRef.current[i];
+        const elA = trackRefsRef.current[i];
+        const elB = maskRefsRef.current[i];
+        const t = `translate3d(${x}px, 0, 0)`;
+        if (elA) elA.style.transform = t;
+        if (elB) elB.style.transform = t;
+      }
+    };
 
     function step(now) {
       const dt = Math.min(40, now - last);
@@ -52,15 +66,23 @@ export default function CardStream({ images = [], onImageClick, enableKeyBoost =
 
       // apply slight friction to velocityRef (momentum)
       velocityRef.current *= 0.995;
-
-      // sync to DOM by forcing react render occasionally
-      // we avoid heavy setState on every frame; use small throttle
-      setSeed((s) => (s + 1) % 1000000);
+      updateTransforms();
 
       rafRef.current = requestAnimationFrame(step);
     }
 
-    rafRef.current = requestAnimationFrame(step);
+    const startLoop = () => {
+      if (rafRef.current) return;
+      last = performance.now();
+      rafRef.current = requestAnimationFrame(step);
+    };
+    const stopLoop = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+    startLoop();
 
     // Keyboard handlers: adjust targetKeyBoostRef on arrow down/up
     function onKeyDown(e) {
@@ -82,10 +104,20 @@ export default function CardStream({ images = [], onImageClick, enableKeyBoost =
       }
     }
 
-    if (enableKeyBoost) {
-      window.addEventListener('keydown', onKeyDown);
-      window.addEventListener('keyup', onKeyUp);
-    }
+    const bindKeyboard = () => {
+      if (enableKeyBoost) {
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('keyup', onKeyUp);
+      }
+    };
+    const unbindKeyboard = () => {
+      try {
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+      } catch { }
+    };
+    bindKeyboard();
+
     function onPointerDown(e) {
       dragRef.current.active = true;
       dragRef.current.startX = e.clientX ?? (e.touches && e.touches[0]?.clientX) ?? 0;
@@ -113,7 +145,7 @@ export default function CardStream({ images = [], onImageClick, enableKeyBoost =
       velocityRef.current += -dx * 0.004;
       // clamp
       velocityRef.current = Math.max(-2.5, Math.min(2.5, velocityRef.current));
-      setSeed((s) => s + 1);
+      updateTransforms();
     }
 
     function onPointerUp(e) {
@@ -129,36 +161,56 @@ export default function CardStream({ images = [], onImageClick, enableKeyBoost =
     window.addEventListener('touchmove', onPointerMove, { passive: true });
     window.addEventListener('touchend', onPointerUp);
 
+    // Visibility-based pause (IntersectionObserver + Page Visibility)
+    const io = new IntersectionObserver((entries) => {
+      const vis = entries[0]?.isIntersecting ?? true;
+      visibleRef.current = vis;
+      if (vis) startLoop(); else stopLoop();
+    }, { threshold: 0 });
+    if (container) io.observe(container);
+
+    const onVisChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (visibleRef.current) {
+        startLoop();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisChange);
+
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      stopLoop();
       container.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       container.removeEventListener('touchstart', onPointerDown);
       window.removeEventListener('touchmove', onPointerMove);
       window.removeEventListener('touchend', onPointerUp);
-      // remove keyboard listeners
-      try {
-        if (enableKeyBoost) {
-          window.removeEventListener('keydown', onKeyDown);
-          window.removeEventListener('keyup', onKeyUp);
-        }
-      } catch (err) {}
+      unbindKeyboard();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisChange);
     };
-  }, [images]);
+  }, [images, enableKeyBoost]);
 
   const renderCards = (mask = false) => {
     return images.map((src, idx) => {
-      const x = positionsRef.current[idx] ?? idx * (CARD_WIDTH + CARD_GAP);
       return (
         <div
           key={idx + (mask ? '-m' : '')}
           className={styles.card}
-          style={{ transform: `translate3d(${x}px, 0, 0)`, width: CARD_WIDTH }}
+          style={{ transform: `translate3d(0px, 0, 0)`, width: CARD_WIDTH }}
           onClick={() => typeof onImageClick === 'function' && onImageClick(idx)}
           role={onImageClick ? 'button' : undefined}
           tabIndex={onImageClick ? 0 : undefined}
           aria-hidden="true"
+          ref={(el) => {
+            if (!el) return;
+            if (mask) {
+              maskRefsRef.current[idx] = el;
+            } else {
+              trackRefsRef.current[idx] = el;
+            }
+          }}
         >
           <img src={src} alt={`feedback-${idx}`} draggable={false} />
         </div>

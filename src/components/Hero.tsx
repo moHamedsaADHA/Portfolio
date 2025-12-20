@@ -4,6 +4,7 @@ import { ChevronDown, Mail, Github, Linkedin, ExternalLink, Download } from 'luc
 import cvUrl from '../assets/Mo_Saad\'s_CV.pdf';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import './CvDownloadButton.css';
 // switched to the available PNG asset (was a missing .jpg file)
 import profileImage from '../assets/mohammed-saad-profile.png';
 
@@ -30,7 +31,7 @@ export function Hero() {
             <div className="cosmic-border rounded-full p-1 animate-pulse-glow">
               <img
                 src={profileImage}
-                alt="Mohammad Saad"
+                alt="mohammed Saad"
                 className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-background"
               />
             </div>
@@ -50,7 +51,7 @@ export function Hero() {
             className="space-y-4"
           >
             <h1 className="text-5xl md:text-7xl font-bold gradient-text">
-              Mohammad Saad
+              mohammed Saad
             </h1>
             <div className="flex flex-wrap justify-center gap-2 mb-4">
               <Badge variant="secondary" className="glass-card">Full-Stack Developer</Badge>
@@ -78,17 +79,48 @@ export function Hero() {
               View My Work
               <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
-            {/* Download CV button - opens download via anchor (asChild) */}
-            <Button
-              size="lg"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-glow transition-all duration-300 group"
-              asChild
-            >
-              <a href={cvUrl} download="Mo_Saad's_CV.pdf" aria-label="Download CV">
-                Download CV
-                <Download className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
+            {/* Download CV button - custom checkbox-driven UI (JSX from provided HTML) */}
+            <div id="cv-download-wrapper">
+              <div className="container">
+                <label className="label">
+                  <input
+                    type="checkbox"
+                    className="input"
+                    onChange={(e) => {
+                      const checked = (e.target as HTMLInputElement).checked;
+                      if (checked) {
+                        const a = document.createElement('a');
+                        a.href = cvUrl as string;
+                        a.download = "Mo_Saad's_CV.pdf";
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                      }
+                    }}
+                  />
+                  <span className="circle">
+                    <svg
+                      className="icon"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M12 19V5m0 14-4-4m4 4 4-4"
+                      ></path>
+                    </svg>
+                    <div className="square"></div>
+                  </span>
+                  <p className="title">Download</p>
+                  <p className="title">Done</p>
+                </label>
+              </div>
+            </div>
             <Button 
               onClick={scrollToContact}
               variant="outline"

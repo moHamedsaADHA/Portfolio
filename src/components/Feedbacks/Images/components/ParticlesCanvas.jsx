@@ -6,6 +6,7 @@ export default function ParticlesCanvas() {
   const rafRef = useRef(null);
   const particlesRef = useRef([]);
   const sizeRef = useRef({ w: 0, h: 0 });
+  const visibleRef = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -95,13 +96,43 @@ export default function ParticlesCanvas() {
       rafRef.current = requestAnimationFrame(step);
     }
 
+    const startLoop = () => {
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(step);
+    };
+    const stopLoop = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+
     resize();
     window.addEventListener('resize', resize);
-    rafRef.current = requestAnimationFrame(step);
+    startLoop();
+
+    // Visibility-based pause
+    const io = new IntersectionObserver((entries) => {
+      const vis = entries[0]?.isIntersecting ?? true;
+      visibleRef.current = vis;
+      if (vis) startLoop(); else stopLoop();
+    }, { threshold: 0 });
+    io.observe(canvas);
+
+    const onVisChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (visibleRef.current) {
+        startLoop();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisChange);
 
     return () => {
       window.removeEventListener('resize', resize);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      stopLoop();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisChange);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

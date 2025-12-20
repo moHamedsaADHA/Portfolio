@@ -5,6 +5,7 @@ export default function ScannerCanvas() {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
   const sizeRef = useRef({ w: 0, h: 0 });
+  const visibleRef = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -50,14 +51,44 @@ export default function ScannerCanvas() {
       rafRef.current = requestAnimationFrame(step);
     }
 
+    const startLoop = () => {
+      if (rafRef.current) return;
+      last = performance.now();
+      rafRef.current = requestAnimationFrame(step);
+    };
+    const stopLoop = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+
     resize();
     window.addEventListener('resize', resize);
-    last = performance.now();
-    rafRef.current = requestAnimationFrame(step);
+    startLoop();
+
+    // Visibility-based pause
+    const io = new IntersectionObserver((entries) => {
+      const vis = entries[0]?.isIntersecting ?? true;
+      visibleRef.current = vis;
+      if (vis) startLoop(); else stopLoop();
+    }, { threshold: 0 });
+    io.observe(canvas);
+
+    const onVisChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (visibleRef.current) {
+        startLoop();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisChange);
 
     return () => {
       window.removeEventListener('resize', resize);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      stopLoop();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisChange);
     };
   }, []);
 

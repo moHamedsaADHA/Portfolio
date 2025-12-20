@@ -20,7 +20,9 @@ const InteractiveCursor: React.FC<Props> = ({ enabled = true, particleCount = 8 
   const target = useRef({ x: -1000, y: -1000 });
   const pos = useRef({ x: -1000, y: -1000 });
   const { actualTheme } = useTheme();
+  const colorRef = useRef<string>('rgba(255,255,255,0.95)');
 
+  // Effect A: stable global listeners and RAF loop (does not depend on theme)
   useEffect(() => {
     if (!enabled) return;
 
@@ -38,12 +40,10 @@ const InteractiveCursor: React.FC<Props> = ({ enabled = true, particleCount = 8 
     const handleMove = (e: MouseEvent) => {
       target.current.x = e.clientX;
       target.current.y = e.clientY;
-      // ensure visible
       cursor.style.opacity = '1';
     };
 
     const handleLeave = () => {
-      // move off-screen smoothly
       target.current.x = -1000;
       target.current.y = -1000;
       cursor.style.opacity = '0';
@@ -63,7 +63,6 @@ const InteractiveCursor: React.FC<Props> = ({ enabled = true, particleCount = 8 
     window.addEventListener('mousedown', handleDown);
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
 
-    // Smooth follow loop (GPU-friendly using translate3d)
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
     const tick = () => {
       pos.current.x = lerp(pos.current.x, target.current.x, 0.22);
@@ -71,7 +70,6 @@ const InteractiveCursor: React.FC<Props> = ({ enabled = true, particleCount = 8 
       cursor.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) translate3d(-50%, -50%, 0)`;
       rafRef.current = requestAnimationFrame(tick);
     };
-
     rafRef.current = requestAnimationFrame(tick);
 
     function spawnParticles(cx: number, cy: number) {
@@ -81,7 +79,6 @@ const InteractiveCursor: React.FC<Props> = ({ enabled = true, particleCount = 8 
       for (let i = 0; i < count; i++) {
         const p = document.createElement('div');
         p.className = styles.particle + ' ' + styles.explode;
-        // random angle and distance (small subtle explosion)
         const angle = Math.random() * Math.PI * 2;
         const dist = 8 + Math.random() * 18;
         const dx = Math.cos(angle) * dist;
@@ -93,22 +90,13 @@ const InteractiveCursor: React.FC<Props> = ({ enabled = true, particleCount = 8 
         p.style.setProperty('--tx', `${dx}px`);
         p.style.setProperty('--ty', `${dy}px`);
         p.style.setProperty('--dur', `${dur}ms`);
-
-        // theme-aware color
-        p.style.background = actualTheme === 'dark' ? 'rgba(99,102,241,0.95)' : 'rgba(79,70,229,0.95)';
-
-        // assign animation duration explicitly for older browsers
+        p.style.background = colorRef.current; // theme-aware color via ref
         (p.style as any).animationDuration = `${dur}ms`;
-
         frag.appendChild(p);
-
-        // cleanup after animation
         p.addEventListener('animationend', () => p.remove(), { once: true });
-        // safety removal
         setTimeout(() => p.remove(), dur + 200);
       }
       particlesContainer.appendChild(frag);
-      // keep container small
       const max = 120;
       while (particlesContainer.childElementCount > max) {
         particlesContainer.removeChild(particlesContainer.firstChild as ChildNode);
@@ -123,7 +111,16 @@ const InteractiveCursor: React.FC<Props> = ({ enabled = true, particleCount = 8 
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, particleCount, actualTheme]);
+  }, [enabled, particleCount]);
+
+  // Effect B: update theme color without rebinding listeners
+  useEffect(() => {
+    colorRef.current = actualTheme === 'dark' ? 'rgba(99,102,241,0.95)' : 'rgba(79,70,229,0.95)';
+    const cursor = cursorRef.current;
+    if (cursor) {
+      cursor.style.background = actualTheme === 'dark' ? 'rgba(255,255,255,0.95)' : 'rgba(17,24,39,0.95)';
+    }
+  }, [actualTheme]);
 
   // cursor base color adapts with theme via inline style for immediate effect
   const cursorColor = actualTheme === 'dark' ? 'rgba(255,255,255,0.95)' : 'rgba(17,24,39,0.95)';

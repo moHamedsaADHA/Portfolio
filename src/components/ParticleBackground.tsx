@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import Particles from 'react-particles';
 import { loadSlim } from 'tsparticles-slim';
 import type { Container, Engine } from 'tsparticles-engine';
@@ -6,13 +6,16 @@ import { useTheme } from '../hooks/useTheme';
 
 export function ParticleBackground() {
   const { actualTheme } = useTheme();
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<Container | undefined>();
+  const visibleRef = useRef(true);
 
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadSlim(engine);
   }, []);
 
   const particlesLoaded = useCallback(async (container: Container | undefined) => {
-    // Optional callback after particles loaded
+    containerRef.current = container;
   }, []);
 
   const particleOptions = {
@@ -96,13 +99,39 @@ export function ParticleBackground() {
     detectRetina: true,
   };
 
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      const vis = entries[0]?.isIntersecting ?? true;
+      visibleRef.current = vis;
+      const c = containerRef.current;
+      if (!c) return;
+      if (vis) c.play(); else c.pause();
+    }, { threshold: 0 });
+    io.observe(el);
+
+    const onVisChange = () => {
+      const c = containerRef.current;
+      if (!c) return;
+      if (document.hidden) c.pause(); else if (visibleRef.current) c.play();
+    };
+    document.addEventListener('visibilitychange', onVisChange);
+    return () => {
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisChange);
+    };
+  }, []);
+
   return (
-    <Particles
-      id="particle-background"
-      init={particlesInit}
-      loaded={particlesLoaded}
-      options={particleOptions}
-      className="absolute inset-0 z-0"
-    />
+    <div ref={rootRef} className="absolute inset-0 z-0">
+      <Particles
+        id="particle-background"
+        init={particlesInit}
+        loaded={particlesLoaded}
+        options={particleOptions}
+        className="absolute inset-0 z-0"
+      />
+    </div>
   );
 }

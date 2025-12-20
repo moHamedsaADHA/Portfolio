@@ -4,18 +4,32 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ParticlesCanvas from './Feedbacks/Images/components/ParticlesCanvas';
 import ScannerCanvas from './Feedbacks/Images/components/ScannerCanvas';
 import CardStream from './Feedbacks/Images/components/CardStream';
+// Explicit static asset imports to avoid glob regressions
+import feedback6 from '../assets/feedback6.png';
+import feedback7 from '../assets/feedback7.png';
+import feedback8 from '../assets/feedback8.png';
+import feedback9 from '../assets/feedback9.png';
+import feedback10 from '../assets/feedback10.png';
+import feedback11 from '../assets/feedback11.png';
+import feedback12 from '../assets/feedback12.png';
+import feedback13 from '../assets/feedback13.png';
+import feedback14 from '../assets/feedback14.png';
+import feedback15 from '../assets/feedback15.png';
 
 const Feedbacks: React.FC = () => {
-  // dynamically load feedback assets from src/assets
-  const modules = import.meta.glob('../assets/feedback*.{png,svg}', { eager: true, as: 'url' }) as Record<string, string>;
-  // Sort keys so order is deterministic (feedback6.png, feedback7.png, ...)
-  const images = Object.keys(modules)
-    .sort((a, b) => {
-      const na = a.match(/feedback(\d+)/i)?.[1] ?? '0';
-      const nb = b.match(/feedback(\d+)/i)?.[1] ?? '0';
-      return Number(na) - Number(nb);
-    })
-    .map(k => modules[k]) as string[];
+  // Static ordered list guarantees identical visuals and paths
+  const images = [
+    feedback6,
+    feedback7,
+    feedback8,
+    feedback9,
+    feedback10,
+    feedback11,
+    feedback12,
+    feedback13,
+    feedback14,
+    feedback15,
+  ];
 
   const [modalIdx, setModalIdx] = useState<number | null>(null);
 
